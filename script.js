@@ -33,10 +33,18 @@ chatForm.addEventListener('submit', async (event) => {
   const input = userInput.value.trim();
   if (!input) return;
 
+  // Clear input and display user message bubble
   appendMessage(input, "user");
   userInput.value = "";
-  appendMessage("...thinking...", "ai");
 
+  // Placeholder while waiting for response
+  const thinkingBubble = document.createElement("div");
+  thinkingBubble.className = "msg ai";
+  thinkingBubble.textContent = "...thinking...";
+  chatWindow.appendChild(thinkingBubble);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+
+  // Add user input to history
   messages.push({ role: 'user', content: input });
 
   try {
@@ -48,30 +56,18 @@ chatForm.addEventListener('submit', async (event) => {
       body: JSON.stringify({ messages }),
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
     const result = await response.json();
     const reply = result.choices?.[0]?.message?.content || "Sorry, I couldn't understand that.";
 
-    // Remove "...thinking..." message
-    const allAI = chatWindow.querySelectorAll('.msg.ai');
-    if (allAI.length && allAI[allAI.length - 1].textContent === "...thinking...") {
-      allAI[allAI.length - 1].remove();
-    }
-
+    // Replace "...thinking..." with actual AI message
+    thinkingBubble.remove();
     appendMessage(reply, "ai");
-    messages.push({ role: 'assistant', content: reply });
 
+    // Track assistant's response in conversation history
+    messages.push({ role: 'assistant', content: reply });
   } catch (error) {
     console.error("Error:", error);
-
-    const allAI = chatWindow.querySelectorAll('.msg.ai');
-    if (allAI.length && allAI[allAI.length - 1].textContent === "...thinking...") {
-      allAI[allAI.length - 1].remove();
-    }
-
+    thinkingBubble.remove();
     appendMessage("⚠️ Sorry, something went wrong. Please try again later.", "ai");
   }
 });
