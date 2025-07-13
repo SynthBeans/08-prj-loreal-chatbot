@@ -1,21 +1,21 @@
-/* —— basic reset —— */
-* 
-
-
-{
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 /* —— L'Oréal Branding Logo —— */
 body::before {
   content: "";
-  display: block;
-  background: url('loreal-logo.png') no-repeat center top;
-  background-size: contain;
-  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url('img/loreal-logo.png') no-repeat center center;
+  background-size: 180px auto;
+  height: 80px;
   width: 100%;
   margin-bottom: 24px;
+}
+
+/* —— basic reset —— */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 /* —— body + fonts —— */
@@ -25,7 +25,10 @@ body {
   background-color: #fdf8f4;
   display: flex;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
   padding: 24px;
+  min-height: 100vh;
 }
 
 .page-wrapper {
